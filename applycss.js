@@ -13,7 +13,7 @@
     }
   }
 
-  storeEmail();
+  
   
   var allowedUsers = ["iamhaseeb01@outlook.com", "anotheruser@example.com"];
 
@@ -52,6 +52,6 @@
       console.log("❌ Unauthorized user:", currentUserEmail);
     }
   }
-
+storeEmail();
   applyCSS();
 })();
