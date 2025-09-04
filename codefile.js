@@ -24,7 +24,7 @@
     }
     const hashed = await hashRelNumber(relNumber);
     localStorage.setItem("glitchgoneRelHash", hashed);
-    console.log("✅ Relationship Number hashed and stored:", hashed);
+    console.log("✅");
   }
 
   storeHashedRelNumber();
