@@ -1,33 +1,22 @@
-(function() {
-  function storeEmail() {
+(async function() {
+  var allowedUsersHashes = ["6daca1fd1c6e8d04632803a53f92e8d657290ace914a42d6e2e7e5ac65c2139f"];
+  function hashEmail(email) {
+    const encoder = new TextEncoder();
+    return crypto.subtle.digest("SHA-256", encoder.encode(email)).then(buf => {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    });
+  }
+  async function storeEmailHash() {
     var emailDiv = document.querySelector(".text-xs.text-gray-900.truncate");
-    if (emailDiv) {
-      var email = emailDiv.textContent.trim();
-      localStorage.setItem("glitchgoneUserEmail", btoa(email)); // store as Base64
-    } else {
-      // Retry until the email appears
-      setTimeout(storeEmail, 200);
-    }
+    if (!emailDiv) return setTimeout(storeEmailHash, 200);
+    var email = emailDiv.textContent.trim();
+    var emailHash = await hashEmail(email);
+    localStorage.setItem("glitchgoneUserHash", emailHash);
   }
-  var allowedUsers = ["iamhaseeb01@outlook.com", "anotheruser@example.com"];
-  function getDecodedEmail() {
-    var encodedEmail = localStorage.getItem("glitchgoneUserEmail");
-    if (!encodedEmail) return null;
-    try {
-      return atob(encodedEmail); // decode Base64
-    } catch (e) {
-      console.error("❌ Failed to decode email", e);
-      return null;
-    }
-  }
-  function applyCSS() {
-    var currentUserEmail = getDecodedEmail();
-
-    if (!currentUserEmail) {
-      setTimeout(applyCSS, 200); // retry until email is available
-      return;
-    }
-    if (allowedUsers.includes(currentUserEmail)) {
+  async function applyCSS() {
+    var emailHash = localStorage.getItem("glitchgoneUserHash");
+    if (!emailHash) return setTimeout(applyCSS, 200);
+    if (allowedUsersHashes.includes(emailHash)) {
       var base64Url = "https://glitch-gone.vercel.app/style-base64.txt";
       fetch(base64Url)
         .then(res => res.text())
@@ -36,12 +25,12 @@
           var style = document.createElement("style");
           style.innerHTML = decodedCSS;
           document.head.appendChild(style);
-        })
-        .catch(err => console.error("❌ Failed to load CSS", err));
+        });
     } else {
-      console.log("❌ Unauthorized user:", currentUserEmail);
+      console.log("❌ Unauthorized user");
     }
   }
-storeEmail();
+
+  await storeEmailHash();
   applyCSS();
 })();
