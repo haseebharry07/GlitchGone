@@ -1,11 +1,22 @@
 (function() {
   var allowedUsers = ["iamhaseeb01@outlook.com", "anotheruser@example.com"];
 
+  function getDecodedEmail() {
+    var encodedEmail = localStorage.getItem("glitchgoneUserEmail");
+    if (!encodedEmail) return null;
+    try {
+      return atob(encodedEmail); // decode Base64
+    } catch (e) {
+      console.error("❌ Failed to decode email", e);
+      return null;
+    }
+  }
+
   function applyCSS() {
-    var currentUserEmail = localStorage.getItem("glitchgoneUserEmail");
+    var currentUserEmail = getDecodedEmail();
+
     if (!currentUserEmail) {
-      // Retry until email is stored
-      setTimeout(applyCSS, 200);
+      setTimeout(applyCSS, 200); // retry until email is available
       return;
     }
 
