@@ -1,15 +1,18 @@
 (function() {
-  function storeEmail() {
-    var emailDiv = document.querySelector(".text-xs.text-gray-900.truncate");
-    if (emailDiv) {
-      var email = emailDiv.textContent.trim();
-      localStorage.setItem("glitchgoneUserEmail", btoa(email)); // store as Base64
-      console.log("✅ Email stored (Base64)");
+  function storeRelNumber() {
+    // Find the span with text "Relationship Number"
+    var labelSpan = Array.from(document.querySelectorAll("span"))
+      .find(span => span.textContent.trim() === "Relationship Number");
+
+    if (labelSpan && labelSpan.nextElementSibling) {
+      var relNumber = labelSpan.nextElementSibling.textContent.trim();
+      localStorage.setItem("glitchgoneRelNumber", relNumber);
+      console.log("✅ Relationship Number stored:", relNumber);
     } else {
-      // Retry until the email appears
-      setTimeout(storeEmail, 200);
+      // Retry if the elements are not yet loaded
+      setTimeout(storeRelNumber, 200);
     }
   }
 
-  storeEmail();
+  storeRelNumber();
 })();
