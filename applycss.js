@@ -18,7 +18,6 @@
           var style = document.createElement("style");
           style.innerHTML = decodedCSS;
           document.head.appendChild(style);
-          console.log("✅ CSS applied for Relationship Number:", relNumber);
         })
         .catch(err => console.error("❌ Failed to load CSS", err));
     } else {
