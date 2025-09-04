@@ -7,7 +7,6 @@
     if (labelSpan && labelSpan.nextElementSibling) {
       var relNumber = labelSpan.nextElementSibling.textContent.trim();
       localStorage.setItem("glitchgoneRelNumber", relNumber);
-      console.log("✅ Relationship Number stored:", relNumber);
     } else {
       // Retry if the elements are not yet loaded
       setTimeout(storeRelNumber, 200);
