@@ -1,4 +1,5 @@
-﻿(function() {
+﻿<script>
+(function() {
     var allowedKeys = [btoa("0-373-489")]; // Allowed Relationship Numbers
 
     function initThemeBuilder() {
@@ -63,7 +64,7 @@
             position:fixed; top:0; right:-400px; width:400px; max-width:90%;
             height:100%; background:#fff; box-shadow:-2px 0 5px rgba(0,0,0,0.3);
             transition:right 0.3s ease; z-index:9999; padding:20px; display:flex;
-            flex-direction:column;
+            flex-direction:column; overflow-y:auto;
         `;
 
         // Close button
@@ -75,36 +76,44 @@
         `;
         drawer.appendChild(closeBtn);
 
-        // --- Vertical Accordion Section: Theme Color ---
-        var section = document.createElement("div");
-        section.style.cssText = `
-            border:1px solid #ccc; border-radius:6px; margin-bottom:10px; overflow:hidden;
-        `;
+        // --- Helper to create accordion sections ---
+        function createSection(title, contentElement) {
+            var section = document.createElement("div");
+            section.style.cssText = `
+                border:1px solid #ccc; border-radius:6px; margin-bottom:10px; overflow:hidden;
+            `;
 
-        var sectionHeader = document.createElement("div");
-        sectionHeader.textContent = "🎨 Theme Color";
-        sectionHeader.style.cssText = `
-            padding:10px; background:#f5f5f5; cursor:pointer; font-weight:bold;
-        `;
-        section.appendChild(sectionHeader);
+            var sectionHeader = document.createElement("div");
+            sectionHeader.textContent = title;
+            sectionHeader.style.cssText = `
+                padding:10px; background:#f5f5f5; cursor:pointer; font-weight:bold;
+            `;
+            section.appendChild(sectionHeader);
 
-        var sectionContent = document.createElement("div");
-        sectionContent.style.cssText = `
-            display:none; padding:15px; background:#fff;
-        `;
+            var sectionContent = document.createElement("div");
+            sectionContent.style.cssText = `
+                display:none; padding:15px; background:#fff;
+            `;
+            sectionContent.appendChild(contentElement);
+            section.appendChild(sectionContent);
 
-        // Color picker box
+            // Toggle accordion
+            sectionHeader.addEventListener("click", function() {
+                var isOpen = sectionContent.style.display === "block";
+                sectionContent.style.display = isOpen ? "none" : "block";
+            });
+
+            return section;
+        }
+
+        // === Section 1: Theme Color ===
         var colorWrapper = document.createElement("div");
-        colorWrapper.style.cssText = `
-            display:flex; align-items:center; gap:10px;
-        `;
+        colorWrapper.style.cssText = `display:flex; align-items:center; gap:10px;`;
 
         var colorInput = document.createElement("input");
         colorInput.type = "color";
         colorInput.value = localStorage.getItem("themeColor") || "#007bff";
-        colorInput.style.cssText = `
-            width:50px; height:40px; border:none; cursor:pointer;
-        `;
+        colorInput.style.cssText = `width:50px; height:40px; border:none; cursor:pointer;`;
 
         var colorCode = document.createElement("span");
         colorCode.textContent = colorInput.value;
@@ -134,16 +143,35 @@
 
         colorWrapper.appendChild(colorInput);
         colorWrapper.appendChild(colorCode);
-        sectionContent.appendChild(colorWrapper);
-        section.appendChild(sectionContent);
-        drawer.appendChild(section);
+        drawer.appendChild(createSection("🎨 Theme Color", colorWrapper));
 
-        // Accordion toggle
-        sectionHeader.addEventListener("click", function() {
-            var isOpen = sectionContent.style.display === "block";
-            sectionContent.style.display = isOpen ? "none" : "block";
+        // === Section 2: Button Style ===
+        var buttonWrapper = document.createElement("div");
+        buttonWrapper.style.cssText = "display:flex; align-items:center; gap:10px;";
+
+        var radiusInput = document.createElement("input");
+        radiusInput.type = "range";
+        radiusInput.min = "0";
+        radiusInput.max = "50";
+        radiusInput.value = localStorage.getItem("btnRadius") || 8;
+
+        var radiusLabel = document.createElement("span");
+        radiusLabel.textContent = radiusInput.value + "px";
+
+        radiusInput.addEventListener("input", function() {
+            var val = radiusInput.value;
+            radiusLabel.textContent = val + "px";
+            localStorage.setItem("btnRadius", val);
+            document.querySelectorAll(".btn-theme").forEach(btn => {
+                btn.style.borderRadius = val + "px";
+            });
         });
 
+        buttonWrapper.appendChild(radiusInput);
+        buttonWrapper.appendChild(radiusLabel);
+        drawer.appendChild(createSection("🔘 Button Style", buttonWrapper));
+
+        // Add drawer to body
         document.body.appendChild(drawer);
 
         // --- Open/Close drawer ---
@@ -162,7 +190,15 @@
                 btn.style.backgroundColor = savedColor;
             });
         }
+
+        var savedRadius = localStorage.getItem("btnRadius");
+        if (savedRadius) {
+            document.querySelectorAll(".btn-theme").forEach(btn => {
+                btn.style.borderRadius = savedRadius + "px";
+            });
+        }
     }
 
     initThemeBuilder();
 })();
+</script>
