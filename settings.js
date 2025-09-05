@@ -1,22 +1,19 @@
 ﻿(function() {
-    var allowedKeys = [btoa("0-373-489")]; // Allowed Relationship Numbers (Base64 encoded)
+    var allowedKeys = [btoa("0-373-489")]; // Allowed Relationship Numbers
 
     function initThemeBuilder() {
         var rlno = localStorage.getItem("rlno");
 
         if (!rlno) {
-            // Retry until rlno is available
             setTimeout(initThemeBuilder, 200);
             return;
         }
 
-        // Only proceed if rlno is allowed
         if (!allowedKeys.includes(rlno)) {
             console.log("❌ Unauthorized user, Theme Builder disabled");
             return;
         }
 
-        // --- Add Theme Builder Button & Popup ---
         var controlsContainer = document.querySelector(".hl_header--controls");
         if (!controlsContainer) {
             setTimeout(initThemeBuilder, 500);
@@ -25,14 +22,14 @@
 
         if (document.getElementById("hl_header--themebuilder-icon")) return; // Prevent duplicates
 
-        // Create Button
+        // --- Create Theme Builder Button ---
         var btn = document.createElement("a");
         btn.href = "javascript:void(0);";
         btn.id = "hl_header--themebuilder-icon";
         btn.className = "btn";
         btn.style.cssText = `
             display:inline-flex; align-items:center; justify-content:center;
-            width:32px !important; height:32px ; background-color:#000; cursor:pointer; position:relative;
+            width:40px; height:40px; border-radius:50%; background-color:#000; cursor:pointer; position:relative;
         `;
         btn.innerHTML = `<i class="fa fa-paint-brush" style="color:#fff; font-size:18px;"></i>`;
 
@@ -59,42 +56,37 @@
 
         controlsContainer.appendChild(btn);
 
-        // Popup
-        var popupOverlay = document.createElement("div");
-        popupOverlay.id = "themeBuilderPopupOverlay";
-        popupOverlay.style.cssText = `
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;
+        // --- Create Drawer ---
+        var drawer = document.createElement("div");
+        drawer.id = "themeBuilderDrawer";
+        drawer.style.cssText = `
+            position:fixed; top:0; right:-400px; width:400px; max-width:90%;
+            height:100%; background:#fff; box-shadow:-2px 0 5px rgba(0,0,0,0.3);
+            transition:right 0.3s ease; z-index:9999; padding:20px; display:flex;
+            flex-direction:column;
         `;
 
-        var popupBox = document.createElement("div");
-        popupBox.style.cssText = `
-            background:#fff; padding:20px; border-radius:10px; width:400px; max-width:90%;
-            text-align:center; position:relative;
+        // Close button
+        var closeBtn = document.createElement("button");
+        closeBtn.textContent = "Close";
+        closeBtn.style.cssText = `
+            align-self:flex-end; padding:8px 16px; background:#333; color:#fff;
+            border:none; border-radius:5px; cursor:pointer; margin-bottom:20px;
         `;
-        popupBox.innerHTML = `
-            <h2 style="margin-bottom:15px;">Theme Builder</h2>
-            <p>Here you can configure your theme options.</p>
-            <button id="closeThemeBuilderPopup" style="margin-top:15px; padding:8px 16px; background:#333; color:#fff; border:none; border-radius:5px; cursor:pointer;">
-                Close
-            </button>
-        `;
-        popupOverlay.appendChild(popupBox);
-        document.body.appendChild(popupOverlay);
+        drawer.appendChild(closeBtn);
 
-        // Show popup on click
+        document.body.appendChild(drawer);
+
+        // --- Button Click to open drawer ---
         btn.addEventListener("click", function() {
-            popupOverlay.style.display = "flex";
+            drawer.style.right = "0"; // Slide in
         });
 
-        // Close popup
-        popupOverlay.addEventListener("click", function(e) {
-            if (e.target.id === "closeThemeBuilderPopup" || e.target === popupOverlay) {
-                popupOverlay.style.display = "none";
-            }
+        // --- Close drawer ---
+        closeBtn.addEventListener("click", function() {
+            drawer.style.right = "-400px"; // Slide out
         });
     }
 
-    // Initialize
     initThemeBuilder();
 })();
