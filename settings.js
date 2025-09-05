@@ -1,4 +1,3 @@
-<script>
 (function() {
   // Wait until DOM is ready
   document.addEventListener("DOMContentLoaded", function() {
@@ -78,4 +77,3 @@
     });
   });
 })();
-</script>
