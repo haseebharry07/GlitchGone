@@ -9,19 +9,50 @@
     // Prevent duplicates
     if (document.getElementById("hl_header--settings-icon")) return;
 
-    // Create Settings button
+    // Create Theme Builder button
     var settingsBtn = document.createElement("a");
     settingsBtn.href = "javascript:void(0);";
     settingsBtn.id = "hl_header--settings-icon";
-    settingsBtn.title = "Theme Builder"; // tooltip text
-    settingsBtn.className = "btn btn-circle btn-primary hl_header--copy-link btn-black"; 
-    // `btn-black` will make it like other dark buttons if that class exists
+    settingsBtn.className = "btn btn-circle btn-black"; // black button
+    settingsBtn.style.position = "relative"; // for tooltip positioning
+    settingsBtn.title = "Theme Builder"; // default tooltip
 
-    // Add icon
+    // Add custom icon (you can replace with another icon if needed)
     settingsBtn.innerHTML = `
-      <i class="fa fa-cog" style="color:#fff;"></i>
-      <span class="sr-only">Theme Builder</span>
+      <i class="fa fa-paint-brush" style="color:#fff;"></i>
     `;
+
+    // Tooltip element
+    var tooltip = document.createElement("span");
+    tooltip.textContent = "Theme Builder";
+    tooltip.style.cssText = `
+      visibility: hidden;
+      width: 120px;
+      background-color: green;
+      color: #fff;
+      text-align: center;
+      border-radius: 5px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 10000;
+      bottom: 120%; /* above the button */
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+    `;
+    settingsBtn.appendChild(tooltip);
+
+    // Show tooltip on hover
+    settingsBtn.addEventListener("mouseenter", function() {
+      tooltip.style.visibility = "visible";
+      tooltip.style.opacity = "1";
+    });
+    settingsBtn.addEventListener("mouseleave", function() {
+      tooltip.style.visibility = "hidden";
+      tooltip.style.opacity = "0";
+    });
 
     // Append button to controls
     controlsContainer.appendChild(settingsBtn);
