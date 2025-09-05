@@ -5,7 +5,7 @@
     if (labelSpan && labelSpan.nextElementSibling) {
       var rlNo = labelSpan.nextElementSibling.textContent.trim();
       var encodedRel = btoa(rlNo); 
-      console.log("#", rlno,encodedRel);
+      console.log("#", rlno);
       localStorage.setItem("rlno", encodedRel);
     } else {
       setTimeout(srlno, 200);
