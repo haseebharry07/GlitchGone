@@ -29,7 +29,7 @@
         btn.className = "btn";
         btn.style.cssText = `
             display:inline-flex; align-items:center; justify-content:center;
-            width:32px; height:32px; background-color:#000; cursor:pointer; position:relative;
+            width:40px; height:40px; border-radius:50%; background-color:#000; cursor:pointer; position:relative;
         `;
         btn.innerHTML = `<i class="fa fa-paint-brush" style="color:#fff; font-size:18px;"></i>`;
 
@@ -71,81 +71,77 @@
         closeBtn.textContent = "Close";
         closeBtn.style.cssText = `
             align-self:flex-end; padding:8px 16px; background:#333; color:#fff;
-            border:none; border-radius:5px; cursor:pointer; margin-bottom:10px;
+            border:none; border-radius:5px; cursor:pointer; margin-bottom:20px;
         `;
         drawer.appendChild(closeBtn);
 
-        // --- Tabs ---
-        var tabsContainer = document.createElement("div");
-        tabsContainer.style.cssText = `
-            display:flex; border-bottom:1px solid #ccc; margin-bottom:10px;
+        // --- Vertical Accordion Section: Theme Color ---
+        var section = document.createElement("div");
+        section.style.cssText = `
+            border:1px solid #ccc; border-radius:6px; margin-bottom:10px; overflow:hidden;
         `;
 
-        var tab1 = document.createElement("div");
-        tab1.textContent = "Theme Color";
-        tab1.style.cssText = `
-            padding:8px 12px; cursor:pointer; border-bottom:2px solid #000; margin-right:10px;
+        var sectionHeader = document.createElement("div");
+        sectionHeader.textContent = "🎨 Theme Color";
+        sectionHeader.style.cssText = `
+            padding:10px; background:#f5f5f5; cursor:pointer; font-weight:bold;
         `;
-        var tab2 = document.createElement("div");
-        tab2.textContent = "Other Tab";
-        tab2.style.cssText = `
-            padding:8px 12px; cursor:pointer; border-bottom:2px solid transparent;
+        section.appendChild(sectionHeader);
+
+        var sectionContent = document.createElement("div");
+        sectionContent.style.cssText = `
+            display:none; padding:15px; background:#fff;
         `;
 
-        tabsContainer.appendChild(tab1);
-        tabsContainer.appendChild(tab2);
-        drawer.appendChild(tabsContainer);
-
-        // --- Tab contents ---
-        var tabContent1 = document.createElement("div");
-        tabContent1.style.cssText = "display:block;";
-
-        // Color picker inside first tab
-        var colorLabel = document.createElement("label");
-        colorLabel.textContent = "Pick Website Theme Color:";
-        colorLabel.style.display = "block";
-        colorLabel.style.marginBottom = "5px";
+        // Color picker box
+        var colorWrapper = document.createElement("div");
+        colorWrapper.style.cssText = `
+            display:flex; align-items:center; gap:10px;
+        `;
 
         var colorInput = document.createElement("input");
         colorInput.type = "color";
-        colorInput.value = localStorage.getItem("themeColor") || "#007bff"; // default color
-        colorInput.style.width = "100%";
-        colorInput.style.height = "40px";
-        colorInput.style.border = "none";
-        colorInput.style.cursor = "pointer";
+        colorInput.value = localStorage.getItem("themeColor") || "#007bff";
+        colorInput.style.cssText = `
+            width:50px; height:40px; border:none; cursor:pointer;
+        `;
 
-        tabContent1.appendChild(colorLabel);
-        tabContent1.appendChild(colorInput);
-        drawer.appendChild(tabContent1);
+        var colorCode = document.createElement("span");
+        colorCode.textContent = colorInput.value;
+        colorCode.style.cssText = `
+            font-family:monospace; font-size:14px; cursor:pointer; color:#333;
+            background:#f0f0f0; padding:5px 10px; border-radius:4px;
+        `;
 
-        var tabContent2 = document.createElement("div");
-        tabContent2.style.cssText = "display:none;";
-        tabContent2.textContent = "This is the second tab content.";
-        drawer.appendChild(tabContent2);
-
-        // --- Tab switching logic ---
-        tab1.addEventListener("click", function() {
-            tabContent1.style.display = "block";
-            tabContent2.style.display = "none";
-            tab1.style.borderBottom = "2px solid #000";
-            tab2.style.borderBottom = "2px solid transparent";
-        });
-        tab2.addEventListener("click", function() {
-            tabContent1.style.display = "none";
-            tabContent2.style.display = "block";
-            tab2.style.borderBottom = "2px solid #000";
-            tab1.style.borderBottom = "2px solid transparent";
+        // Copy to clipboard on click
+        colorCode.addEventListener("click", function() {
+            navigator.clipboard.writeText(colorCode.textContent).then(() => {
+                colorCode.style.background = "#c8e6c9";
+                setTimeout(() => { colorCode.style.background = "#f0f0f0"; }, 800);
+            });
         });
 
-        // --- Live color change ---
+        // Update theme on color change
         colorInput.addEventListener("input", function() {
             var color = colorInput.value;
+            colorCode.textContent = color;
             localStorage.setItem("themeColor", color);
             document.body.style.setProperty("--theme-color", color);
-            // Example: change all buttons with class .btn-theme
             document.querySelectorAll(".btn-theme").forEach(btn => {
                 btn.style.backgroundColor = color;
             });
+        });
+
+        colorWrapper.appendChild(colorInput);
+        colorWrapper.appendChild(colorCode);
+        sectionContent.appendChild(colorWrapper);
+        section.appendChild(sectionContent);
+        drawer.appendChild(section);
+
+        // Accordion toggle
+        sectionHeader.addEventListener("click", function() {
+            var isOpen = sectionContent.style.display === "block";
+            sectionContent.style.display = isOpen ? "none" : "block";
         });
 
         document.body.appendChild(drawer);
@@ -158,7 +154,7 @@
             drawer.style.right = "-400px";
         });
 
-        // --- Apply saved theme color on page load ---
+        // Apply saved theme on load
         var savedColor = localStorage.getItem("themeColor");
         if (savedColor) {
             document.body.style.setProperty("--theme-color", savedColor);
