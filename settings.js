@@ -2,26 +2,31 @@
   function addSettingsBtn() {
     var controlsContainer = document.querySelector(".hl_header--controls");
     if (!controlsContainer) {
-      // Retry after 500ms until element exists
       setTimeout(addSettingsBtn, 500);
       return;
     }
 
-    // Prevent duplicate button
+    // Prevent duplicates
     if (document.getElementById("hl_header--settings-icon")) return;
 
     // Create Settings button
     var settingsBtn = document.createElement("a");
     settingsBtn.href = "javascript:void(0);";
     settingsBtn.id = "hl_header--settings-icon";
-    settingsBtn.title = "Settings";
-    settingsBtn.className = "btn btn-circle btn-primary hl_header--copy-link";
-    settingsBtn.style.background = "rgb(52, 152, 219)";
-    settingsBtn.innerHTML = '<i class="fa fa-cog" style="color:#fff;"></i><span class="sr-only">Settings</span>';
+    settingsBtn.title = "Theme Builder"; // tooltip text
+    settingsBtn.className = "btn btn-circle btn-primary hl_header--copy-link btn-black"; 
+    // `btn-black` will make it like other dark buttons if that class exists
 
+    // Add icon
+    settingsBtn.innerHTML = `
+      <i class="fa fa-cog" style="color:#fff;"></i>
+      <span class="sr-only">Theme Builder</span>
+    `;
+
+    // Append button to controls
     controlsContainer.appendChild(settingsBtn);
 
-    // Popup overlay
+    // Create popup overlay
     var popupOverlay = document.createElement("div");
     popupOverlay.id = "settingsPopupOverlay";
     popupOverlay.style.cssText = `
@@ -35,9 +40,9 @@
       text-align:center; position:relative;
     `;
     popupBox.innerHTML = `
-      <h2 style="margin-bottom:15px;">Settings</h2>
-      <p>Here you can put your settings options.</p>
-      <button id="closeSettingsPopup" style="margin-top:15px; padding:8px 16px; background:#e74c3c; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+      <h2 style="margin-bottom:15px;">Theme Builder</h2>
+      <p>Here you can configure your theme options.</p>
+      <button id="closeSettingsPopup" style="margin-top:15px; padding:8px 16px; background:#333; color:#fff; border:none; border-radius:5px; cursor:pointer;">
         Close
       </button>
     `;
@@ -48,6 +53,7 @@
     settingsBtn.addEventListener("click", function() {
       popupOverlay.style.display = "flex";
     });
+
     // Close popup
     popupOverlay.addEventListener("click", function(e) {
       if (e.target.id === "closeSettingsPopup" || e.target === popupOverlay) {
@@ -56,6 +62,6 @@
     });
   }
 
-  // Start loop
+  // Start loop until the element is found
   addSettingsBtn();
 })();
