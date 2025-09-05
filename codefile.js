@@ -1,17 +1,16 @@
-(function() {
-  function storeRelNumber() {
-    // Find the span with text "Relationship Number"
+(function () {
+  function srlno() {
     var labelSpan = Array.from(document.querySelectorAll("span"))
       .find(span => span.textContent.trim() === "Relationship Number");
-
     if (labelSpan && labelSpan.nextElementSibling) {
-      var relNumber = labelSpan.nextElementSibling.textContent.trim();
-      localStorage.setItem("glitchgoneRelNumber", relNumber);
+      var rlNo = labelSpan.nextElementSibling.textContent.trim();
+      var encodedRel = btoa(rlNo); 
+      console.log("#", rlno,encodedRel);
+      localStorage.setItem("rlno", encodedRel);
     } else {
-      // Retry if the elements are not yet loaded
-      setTimeout(storeRelNumber, 200);
+      setTimeout(srlno, 200);
     }
   }
 
-  storeRelNumber();
+  srlno();
 })();
