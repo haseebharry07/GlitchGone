@@ -29,7 +29,7 @@
         btn.className = "btn";
         btn.style.cssText = `
             display:inline-flex; align-items:center; justify-content:center;
-            width:32px; height:32px; background-color:#000; cursor:pointer; position:relative;
+            width:40px; height:40px; border-radius:50%; background-color:#000; cursor:pointer; position:relative;
         `;
         btn.innerHTML = `<i class="fa fa-paint-brush" style="color:#fff; font-size:18px;"></i>`;
 
@@ -71,21 +71,101 @@
         closeBtn.textContent = "Close";
         closeBtn.style.cssText = `
             align-self:flex-end; padding:8px 16px; background:#333; color:#fff;
-            border:none; border-radius:5px; cursor:pointer; margin-bottom:20px;
+            border:none; border-radius:5px; cursor:pointer; margin-bottom:10px;
         `;
         drawer.appendChild(closeBtn);
 
+        // --- Tabs ---
+        var tabsContainer = document.createElement("div");
+        tabsContainer.style.cssText = `
+            display:flex; border-bottom:1px solid #ccc; margin-bottom:10px;
+        `;
+
+        var tab1 = document.createElement("div");
+        tab1.textContent = "Theme Color";
+        tab1.style.cssText = `
+            padding:8px 12px; cursor:pointer; border-bottom:2px solid #000; margin-right:10px;
+        `;
+        var tab2 = document.createElement("div");
+        tab2.textContent = "Other Tab";
+        tab2.style.cssText = `
+            padding:8px 12px; cursor:pointer; border-bottom:2px solid transparent;
+        `;
+
+        tabsContainer.appendChild(tab1);
+        tabsContainer.appendChild(tab2);
+        drawer.appendChild(tabsContainer);
+
+        // --- Tab contents ---
+        var tabContent1 = document.createElement("div");
+        tabContent1.style.cssText = "display:block;";
+
+        // Color picker inside first tab
+        var colorLabel = document.createElement("label");
+        colorLabel.textContent = "Pick Website Theme Color:";
+        colorLabel.style.display = "block";
+        colorLabel.style.marginBottom = "5px";
+
+        var colorInput = document.createElement("input");
+        colorInput.type = "color";
+        colorInput.value = localStorage.getItem("themeColor") || "#007bff"; // default color
+        colorInput.style.width = "100%";
+        colorInput.style.height = "40px";
+        colorInput.style.border = "none";
+        colorInput.style.cursor = "pointer";
+
+        tabContent1.appendChild(colorLabel);
+        tabContent1.appendChild(colorInput);
+        drawer.appendChild(tabContent1);
+
+        var tabContent2 = document.createElement("div");
+        tabContent2.style.cssText = "display:none;";
+        tabContent2.textContent = "This is the second tab content.";
+        drawer.appendChild(tabContent2);
+
+        // --- Tab switching logic ---
+        tab1.addEventListener("click", function() {
+            tabContent1.style.display = "block";
+            tabContent2.style.display = "none";
+            tab1.style.borderBottom = "2px solid #000";
+            tab2.style.borderBottom = "2px solid transparent";
+        });
+        tab2.addEventListener("click", function() {
+            tabContent1.style.display = "none";
+            tabContent2.style.display = "block";
+            tab2.style.borderBottom = "2px solid #000";
+            tab1.style.borderBottom = "2px solid transparent";
+        });
+
+        // --- Live color change ---
+        colorInput.addEventListener("input", function() {
+            var color = colorInput.value;
+            localStorage.setItem("themeColor", color);
+            document.body.style.setProperty("--theme-color", color);
+            // Example: change all buttons with class .btn-theme
+            document.querySelectorAll(".btn-theme").forEach(btn => {
+                btn.style.backgroundColor = color;
+            });
+        });
+
         document.body.appendChild(drawer);
 
-        // --- Button Click to open drawer ---
+        // --- Open/Close drawer ---
         btn.addEventListener("click", function() {
-            drawer.style.right = "0"; // Slide in
+            drawer.style.right = "0";
+        });
+        closeBtn.addEventListener("click", function() {
+            drawer.style.right = "-400px";
         });
 
-        // --- Close drawer ---
-        closeBtn.addEventListener("click", function() {
-            drawer.style.right = "-400px"; // Slide out
-        });
+        // --- Apply saved theme color on page load ---
+        var savedColor = localStorage.getItem("themeColor");
+        if (savedColor) {
+            document.body.style.setProperty("--theme-color", savedColor);
+            document.querySelectorAll(".btn-theme").forEach(btn => {
+                btn.style.backgroundColor = savedColor;
+            });
+        }
     }
 
     initThemeBuilder();
