@@ -1,5 +1,4 @@
-﻿<script>
-(function() {
+﻿(function() {
     var allowedKeys = [btoa("0-373-489")]; // Allowed Relationship Numbers
 
     function initThemeBuilder() {
@@ -201,4 +200,3 @@
 
     initThemeBuilder();
 })();
-</script>
