@@ -29,7 +29,7 @@
         btn.className = "btn";
         btn.style.cssText = `
             display:inline-flex; align-items:center; justify-content:center;
-            width:40px; height:40px; border-radius:50%; background-color:#000; cursor:pointer; position:relative;
+            width:32px; height:32px; background-color:#000; cursor:pointer; position:relative;
         `;
         btn.innerHTML = `<i class="fa fa-paint-brush" style="color:#fff; font-size:18px;"></i>`;
 
