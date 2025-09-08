@@ -94,8 +94,8 @@
     function applySidebarTextColor(color) {
         const sidebarLinks = document.querySelectorAll('#sidebar-v2 a');
         sidebarLinks.forEach(a => {
-            a.style.setProperty("color", color, "important");
-            const span = a.querySelector('span');
+            a.style.setProperty("color", color, "important"); // apply to link itself
+            const span = a.querySelector('span');            // apply to child span
             if (span) span.style.setProperty("color", color, "important");
         });
     }
@@ -108,12 +108,17 @@
             styleTag.id = "tb-sidebar-hover-style";
             document.head.appendChild(styleTag);
         }
+
         styleTag.innerHTML = `
+        /* Links hover */
         #sidebar-v2 a:hover,
-        #sidebar-v2 a:hover span {
+        #sidebar-v2 a:hover span,
+        #sidebar-v2 a:focus,
+        #sidebar-v2 a:focus span {
             color: ${color} !important;
             opacity: 1 !important;
-        }`;
+        }
+    `;
     }
 
     // Build theme colors section
