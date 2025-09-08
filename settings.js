@@ -197,28 +197,34 @@ function buildThemeColorsSection(container) {
     { key: "primaryBgColor", cssVar: "--primary-bg-color" },
     { key: "sidebarBgColor", cssVar: "--sidebar-bg-color" },
   ];
-  
+
   colorMap.forEach(c => {
     const val = localStorage.getItem(c.key);
     if (val) document.body.style.setProperty(c.cssVar, val);
   });
 
-  // Sidebar text color (menu links)
+  // Sidebar menu links
+  const sidebarLinks = document.querySelectorAll('#sidebar-v2 a');
+
+  // Sidebar text color
   const sidebarTextColor = localStorage.getItem("sidebarTextColor");
   if (sidebarTextColor) {
-    const links = document.querySelectorAll('#sidebar-v2 a');
-    links.forEach(a => {
-      a.style.color = sidebarTextColor;
+    sidebarLinks.forEach(a => {
+      a.style.setProperty("color", sidebarTextColor, "important"); // override inline color
     });
   }
 
-  // Sidebar tabs color (used to be sidebarIconColor)
-  const sidebarTabColor = localStorage.getItem("sidebarIconColor");
-  if (sidebarTabColor) {
-    const links = document.querySelectorAll('#sidebar-v2 a');
-    links.forEach(a => {
-      a.style.color = sidebarTabColor;
-    });
+  // Sidebar tabs hover color (using sidebarIconColor picker)
+  const sidebarHoverColor = localStorage.getItem("sidebarIconColor");
+  if (sidebarHoverColor) {
+    // Add a dynamic style tag for hover
+    let styleTag = document.getElementById("tb-sidebar-hover-style");
+    if (!styleTag) {
+      styleTag = document.createElement("style");
+      styleTag.id = "tb-sidebar-hover-style";
+      document.head.appendChild(styleTag);
+    }
+    styleTag.innerHTML = `#sidebar-v2 a:hover { color: ${sidebarHoverColor} !important; }`;
   }
 
   // Button radius
@@ -227,6 +233,7 @@ function buildThemeColorsSection(container) {
     document.querySelectorAll(".btn-theme").forEach(b => b.style.borderRadius = savedRadius + "px");
   }
 }
+
 
 
   function findControlsContainer() {
