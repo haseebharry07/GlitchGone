@@ -2,11 +2,9 @@
   const DEBUG = true;
   const log = (...args) => { if (DEBUG) console.log('[ThemeBuilder]', ...args); };
 
-  /* ================= Config ================= */
-  const allowedKeys = [btoa("0-373-489")]; // Allowed base64 rlno values
-  const MAX_ATTEMPTS = 40; // Retry attempts (~8 seconds)
+  const allowedKeys = [btoa("0-373-489")];
+  const MAX_ATTEMPTS = 40;
 
-  /* ================= Load CSS ================= */
   function loadThemeBuilderCSS() {
     if (!document.getElementById('themeBuilderCSS')) {
       const link = document.createElement('link');
@@ -19,7 +17,6 @@
   }
   loadThemeBuilderCSS();
 
-  /* ================= Utilities ================= */
   function createSection(title, contentBuilder) {
     const section = document.createElement("div");
     section.className = "tb-section";
@@ -32,7 +29,7 @@
     content.className = "tb-section-content";
 
     header.addEventListener("click", () => {
-      content.style.display = content.style.display === "block" ? "none" : "block";
+      content.classList.toggle("open");
     });
 
     section.appendChild(header);
@@ -47,17 +44,17 @@
     tooltip.textContent = text;
     btn.appendChild(tooltip);
 
+    // Position tooltip below the button
+    btn.style.position = 'relative';
+
     btn.addEventListener("mouseenter", () => {
-      tooltip.style.visibility = "visible";
-      tooltip.style.opacity = "1";
+      tooltip.classList.add("visible");
     });
     btn.addEventListener("mouseleave", () => {
-      tooltip.style.visibility = "hidden";
-      tooltip.style.opacity = "0";
+      tooltip.classList.remove("visible");
     });
   }
 
-  /* ================= Color Picker ================= */
   function createColorPicker(labelText, storageKey, cssVar) {
     const wrapper = document.createElement("div");
     wrapper.className = "tb-color-picker-wrapper";
@@ -77,8 +74,8 @@
 
     colorCode.addEventListener("click", () => {
       navigator.clipboard.writeText(colorCode.textContent).then(() => {
-        colorCode.style.background = "#c8e6c9";
-        setTimeout(() => (colorCode.style.background = "#f0f0f0"), 800);
+        colorCode.classList.add("copied");
+        setTimeout(() => colorCode.classList.remove("copied"), 800);
       });
     });
 
@@ -148,13 +145,11 @@
     });
   }
 
-  /* ================= Builder UI ================= */
   let headerObserver = null;
 
   function createBuilderUI(controlsContainer) {
     if (!controlsContainer || document.getElementById("hl_header--themebuilder-icon")) return;
 
-    // Button
     const btn = document.createElement("a");
     btn.href = "javascript:void(0);";
     btn.id = "hl_header--themebuilder-icon";
@@ -163,36 +158,36 @@
     initTooltip(btn, "Theme Builder");
     controlsContainer.appendChild(btn);
 
-    // Drawer
     if (!document.getElementById('themeBuilderDrawer')) {
       const drawer = document.createElement("div");
       drawer.id = "themeBuilderDrawer";
 
-      // Header
+      drawer.className = "tb-drawer"; // use CSS class for all positioning
+
       const headerBar = document.createElement('div');
       headerBar.className = "tb-drawer-header";
+
       const title = document.createElement('div');
       title.textContent = 'Theme Builder';
       title.className = "tb-drawer-title";
+
       const closeBtn = document.createElement('button');
       closeBtn.innerHTML = '&times;';
       closeBtn.className = "tb-drawer-close";
+
       headerBar.appendChild(title);
       headerBar.appendChild(closeBtn);
       drawer.appendChild(headerBar);
 
-      // Content
       const contentWrapper = document.createElement('div');
       contentWrapper.className = "tb-drawer-content";
       drawer.appendChild(contentWrapper);
 
-      // Sections
       contentWrapper.appendChild(createSection("🎨 Theme Colors", buildThemeColorsSection));
       contentWrapper.appendChild(createSection("🔘 Button Style", buildButtonStyleSection));
 
       document.body.appendChild(drawer);
 
-      // Toggle
       btn.addEventListener('click', () => drawer.classList.add('open'));
       closeBtn.addEventListener('click', () => drawer.classList.remove('open'));
 
@@ -223,7 +218,7 @@
       if (attempts < MAX_ATTEMPTS) setTimeout(() => initThemeBuilder(attempts + 1), 200);
       return;
     }
-    if (!allowedKeys.includes(rlno)) return; // unauthorized
+    if (!allowedKeys.includes(rlno)) return;
 
     const controlsContainer = findControlsContainer();
     if (!controlsContainer) {
@@ -233,7 +228,6 @@
 
     createBuilderUI(controlsContainer);
 
-    // Observe header for SPA changes
     const headerEl = document.querySelector('header.hl_header') || document.querySelector('header');
     if (headerEl && !headerObserver) {
       headerObserver = new MutationObserver(() => {
@@ -245,5 +239,4 @@
 
   document.addEventListener('DOMContentLoaded', () => setTimeout(() => initThemeBuilder(0), 50));
   setTimeout(() => initThemeBuilder(0), 50);
-
 })();
