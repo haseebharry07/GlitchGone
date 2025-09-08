@@ -92,13 +92,21 @@
 
     // Apply sidebar text color live
     function applySidebarTextColor(color) {
-        const sidebarLinks = document.querySelectorAll('#sidebar-v2 a');
-        sidebarLinks.forEach(a => {
-            a.style.setProperty("color", color, "important"); // apply to link itself
-            const span = a.querySelector('span');            // apply to child span
-            if (span) span.style.setProperty("color", color, "important");
-        });
+        let styleTag = document.getElementById("tb-sidebar-text-style");
+        if (!styleTag) {
+            styleTag = document.createElement("style");
+            styleTag.id = "tb-sidebar-text-style";
+            document.head.appendChild(styleTag);
+        }
+
+        styleTag.innerHTML = `
+        #sidebar-v2 a,
+        #sidebar-v2 a span {
+            color: ${color} !important;
+        }
+    `;
     }
+
 
     // Apply sidebar hover color live
     function applySidebarHoverColor(color) {
@@ -110,7 +118,6 @@
         }
 
         styleTag.innerHTML = `
-        /* Links hover */
         #sidebar-v2 a:hover,
         #sidebar-v2 a:hover span,
         #sidebar-v2 a:focus,
@@ -120,6 +127,7 @@
         }
     `;
     }
+
 
     // Build theme colors section
     function buildThemeColorsSection(container) {
