@@ -5,6 +5,7 @@
     const allowedKeys = [btoa("0-373-489")];
     const MAX_ATTEMPTS = 40;
 
+    // Load CSS for Theme Builder
     function loadThemeBuilderCSS() {
         if (!document.getElementById('themeBuilderCSS')) {
             const link = document.createElement('link');
@@ -17,6 +18,7 @@
     }
     loadThemeBuilderCSS();
 
+    // Create collapsible sections
     function createSection(title, contentBuilder) {
         const section = document.createElement("div");
         section.className = "tb-section";
@@ -38,23 +40,18 @@
         return section;
     }
 
+    // Tooltip helper
     function initTooltip(btn, text) {
         const tooltip = document.createElement("div");
         tooltip.className = "tb-tooltip";
         tooltip.textContent = text;
         btn.appendChild(tooltip);
-
-        // Position tooltip below the button
         btn.style.position = 'relative';
-
-        btn.addEventListener("mouseenter", () => {
-            tooltip.classList.add("visible");
-        });
-        btn.addEventListener("mouseleave", () => {
-            tooltip.classList.remove("visible");
-        });
+        btn.addEventListener("mouseenter", () => tooltip.classList.add("visible"));
+        btn.addEventListener("mouseleave", () => tooltip.classList.remove("visible"));
     }
 
+    // Color picker creator
     function createColorPicker(labelText, storageKey, cssVar, applyFn) {
         const wrapper = document.createElement("div");
         wrapper.className = "tb-color-picker-wrapper";
@@ -84,7 +81,7 @@
             colorCode.textContent = color;
             localStorage.setItem(storageKey, color);
             if (cssVar) document.body.style.setProperty(cssVar, color);
-            if (applyFn) applyFn(color); // apply live changes
+            if (applyFn) applyFn(color);
         });
 
         wrapper.appendChild(label);
@@ -93,7 +90,7 @@
         return wrapper;
     }
 
-    // Apply sidebar colors live
+    // Apply sidebar text color live
     function applySidebarTextColor(color) {
         const sidebarLinks = document.querySelectorAll('#sidebar-v2 a');
         sidebarLinks.forEach(a => {
@@ -103,6 +100,7 @@
         });
     }
 
+    // Apply sidebar hover color live
     function applySidebarHoverColor(color) {
         let styleTag = document.getElementById("tb-sidebar-hover-style");
         if (!styleTag) {
@@ -111,22 +109,14 @@
             document.head.appendChild(styleTag);
         }
         styleTag.innerHTML = `
-    #sidebar-v2 a:hover,
-    #sidebar-v2 a:hover span {
-      color: ${color} !important;
-      opacity: 1 !important;
-    }`;
+        #sidebar-v2 a:hover,
+        #sidebar-v2 a:hover span {
+            color: ${color} !important;
+            opacity: 1 !important;
+        }`;
     }
-    //function buildThemeColorsSection(container) {
-    //    const colors = [
-    //        { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
-    //        { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
-    //        { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
-    //        { label: "Left Sidebar Tabs Color", key: "sidebarTextColor", var: null }, // null because applied via JS
-    //        { label: "Left Sidebar Tabs Hover Color", key: "sidebarIconColor", var: null }, // applied via JS
-    //    ];
-    //    colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var)));
-    //}
+
+    // Build theme colors section
     function buildThemeColorsSection(container) {
         const colors = [
             { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
@@ -138,6 +128,42 @@
         colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var, c.apply)));
     }
 
+    // Dummy Button Style section
+    function buildButtonStyleSection(container) {
+        const span = document.createElement('span');
+        span.textContent = "Button style options will be here.";
+        container.appendChild(span);
+    }
+
+    // Apply saved settings
+    function applySavedSettings() {
+        const colorMap = [
+            { key: "primaryColor", cssVar: "--primary-color" },
+            { key: "primaryBgColor", cssVar: "--primary-bg-color" },
+            { key: "sidebarBgColor", cssVar: "--sidebar-bg-color" },
+        ];
+        colorMap.forEach(c => {
+            const val = localStorage.getItem(c.key);
+            if (val) document.body.style.setProperty(c.cssVar, val);
+        });
+
+        const sidebarText = localStorage.getItem("sidebarTextColor");
+        if (sidebarText) applySidebarTextColor(sidebarText);
+
+        const sidebarHover = localStorage.getItem("sidebarIconColor");
+        if (sidebarHover) applySidebarHoverColor(sidebarHover);
+    }
+
+    // Find header controls container
+    function findControlsContainer() {
+        const header = document.querySelector('header.hl_header') || document.querySelector('header');
+        if (!header) return null;
+        const controls = header.querySelectorAll('.hl_header--controls');
+        if (!controls.length) return null;
+        return Array.from(controls).sort((a, b) => b.childElementCount - a.childElementCount)[0];
+    }
+
+    // Create Builder UI
     let headerObserver = null;
     function createBuilderUI(controlsContainer) {
         if (!controlsContainer || document.getElementById("hl_header--themebuilder-icon")) return;
@@ -153,8 +179,7 @@
         if (!document.getElementById('themeBuilderDrawer')) {
             const drawer = document.createElement("div");
             drawer.id = "themeBuilderDrawer";
-
-            drawer.className = "tb-drawer"; // use CSS class for all positioning
+            drawer.className = "tb-drawer";
 
             const headerBar = document.createElement('div');
             headerBar.className = "tb-drawer-header";
@@ -186,37 +211,8 @@
             applySavedSettings();
         }
     }
-    function applySavedSettings() {
-        // Theme colors
-        const colorMap = [
-            { key: "primaryColor", cssVar: "--primary-color" },
-            { key: "primaryBgColor", cssVar: "--primary-bg-color" },
-            { key: "sidebarBgColor", cssVar: "--sidebar-bg-color" },
-        ];
-        colorMap.forEach(c => {
-            const val = localStorage.getItem(c.key);
-            if (val) document.body.style.setProperty(c.cssVar, val);
-        });
 
-        // Sidebar colors
-        const sidebarText = localStorage.getItem("sidebarTextColor");
-        if (sidebarText) applySidebarTextColor(sidebarText);
-        const sidebarHover = localStorage.getItem("sidebarIconColor");
-        if (sidebarHover) applySidebarHoverColor(sidebarHover);
-
-        // Button radius
-        const savedRadius = localStorage.getItem("btnRadius");
-        if (savedRadius) {
-            document.querySelectorAll(".btn-theme").forEach(b => b.style.borderRadius = savedRadius + "px");
-        }
-    }
-    function findControlsContainer() {
-        const header = document.querySelector('header.hl_header') || document.querySelector('header');
-        if (!header) return null;
-        const controls = header.querySelectorAll('.hl_header--controls');
-        if (!controls.length) return null;
-        return Array.from(controls).sort((a, b) => b.childElementCount - a.childElementCount)[0];
-    }
+    // Initialize Theme Builder
     function initThemeBuilder(attempts = 0) {
         const rlno = localStorage.getItem('rlno');
         if (!rlno) {
@@ -244,4 +240,5 @@
 
     document.addEventListener('DOMContentLoaded', () => setTimeout(() => initThemeBuilder(0), 50));
     setTimeout(() => initThemeBuilder(0), 50);
+
 })();
