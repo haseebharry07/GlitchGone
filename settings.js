@@ -92,16 +92,16 @@
     return wrapper;
   }
 
-  function buildThemeColorsSection(container) {
-    const colors = [
-      { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
-      { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
-      { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
-      { label: "Left Sidebar Text Color", key: "sidebarTextColor", var: "--sidebar-text-color" },
-      { label: "Left Sidebar Icon Color", key: "sidebarIconColor", var: "--sidebar-icon-color" },
-    ];
-    colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var)));
-  }
+function buildThemeColorsSection(container) {
+  const colors = [
+    { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
+    { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
+    { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
+    { label: "Left Sidebar Tabs Color", key: "sidebarTextColor", var: null }, // null because applied via JS
+    { label: "Left Sidebar Tabs Hover Color", key: "sidebarIconColor", var: null }, // applied via JS
+  ];
+  colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var)));
+}
 
   function buildButtonStyleSection(container) {
     const info = document.createElement("p");
@@ -191,13 +191,43 @@
   }
 
   function applySavedSettings() {
-    ["primaryColor", "primaryBgColor", "sidebarBgColor", "sidebarTextColor", "sidebarIconColor"].forEach(key => {
-      const val = localStorage.getItem(key);
-      if (val) document.body.style.setProperty("--" + key.replace(/[A-Z]/g, m => "-" + m.toLowerCase()), val);
+  // Theme colors
+  const colorMap = [
+    { key: "primaryColor", cssVar: "--primary-color" },
+    { key: "primaryBgColor", cssVar: "--primary-bg-color" },
+    { key: "sidebarBgColor", cssVar: "--sidebar-bg-color" },
+  ];
+  
+  colorMap.forEach(c => {
+    const val = localStorage.getItem(c.key);
+    if (val) document.body.style.setProperty(c.cssVar, val);
+  });
+
+  // Sidebar text color (menu links)
+  const sidebarTextColor = localStorage.getItem("sidebarTextColor");
+  if (sidebarTextColor) {
+    const links = document.querySelectorAll('#sidebar-v2 a');
+    links.forEach(a => {
+      a.style.color = sidebarTextColor;
     });
-    const savedRadius = localStorage.getItem("btnRadius");
-    if (savedRadius) document.querySelectorAll(".btn-theme").forEach(b => b.style.borderRadius = savedRadius + "px");
   }
+
+  // Sidebar tabs color (used to be sidebarIconColor)
+  const sidebarTabColor = localStorage.getItem("sidebarIconColor");
+  if (sidebarTabColor) {
+    const links = document.querySelectorAll('#sidebar-v2 a');
+    links.forEach(a => {
+      a.style.color = sidebarTabColor;
+    });
+  }
+
+  // Button radius
+  const savedRadius = localStorage.getItem("btnRadius");
+  if (savedRadius) {
+    document.querySelectorAll(".btn-theme").forEach(b => b.style.borderRadius = savedRadius + "px");
+  }
+}
+
 
   function findControlsContainer() {
     const header = document.querySelector('header.hl_header') || document.querySelector('header');
