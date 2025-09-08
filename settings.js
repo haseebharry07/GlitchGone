@@ -132,11 +132,6 @@
     controlRow.appendChild(radiusVal);
     container.appendChild(controlRow);
 
-    const sample = document.createElement("button");
-    sample.textContent = "Sample Button";
-    sample.className = "btn-theme";
-    container.appendChild(sample);
-
     radiusInput.addEventListener("input", () => {
       const v = radiusInput.value;
       radiusVal.textContent = v + "px";
