@@ -72,4 +72,18 @@ function initThemeBuilder() {
   contentWrapper.appendChild(createSection("🔘 Button Style", buildButtonStyleSection));
 
   btn.addEventListener("click", () => (drawer.style.right = "0"));
-  closeBtn.addEventListener
+  closeBtn.addEventListener("click", () => (drawer.style.right = "-400px"));
+
+  // Apply saved colors
+  ["primaryColor", "primaryBgColor", "sidebarBgColor", "sidebarTextColor", "sidebarIconColor"].forEach((key) => {
+    const val = localStorage.getItem(key);
+    if (val) document.body.style.setProperty("--" + key.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase()), val);
+  });
+
+  const savedRadius = localStorage.getItem("btnRadius");
+  if (savedRadius) {
+    document.querySelectorAll(".btn-theme").forEach((b) => {
+      b.style.borderRadius = savedRadius + "px";
+    });
+  }
+}
