@@ -16,6 +16,9 @@
   overflow-y: auto;
 }
 
+#themeBuilderDrawer.open {
+  right: 0;
+}
 /* Drawer header */
 #themeBuilderDrawer > div:first-child {
   display: flex;
