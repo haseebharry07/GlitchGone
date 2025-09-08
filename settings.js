@@ -92,11 +92,12 @@
 
     // Apply sidebar text color live
     function applySidebarTextColor(color) {
-        const sidebarLinks = document.querySelectorAll('#sidebar-v2 a');
+        // Select all sidebar links
+        const sidebarLinks = document.querySelectorAll('.hl_nav-header-without-footer nav a');
         sidebarLinks.forEach(a => {
-            a.style.setProperty("color", color, "important");
+            a.style.setProperty("color", color, "important"); // link color
             const span = a.querySelector('span');
-            if (span) span.style.setProperty("color", color, "important");
+            if (span) span.style.setProperty("color", color, "important"); // span text
         });
     }
 
@@ -109,11 +110,11 @@
             document.head.appendChild(styleTag);
         }
         styleTag.innerHTML = `
-        #sidebar-v2 a:hover,
-        #sidebar-v2 a:hover span {
-            color: ${color} !important;
-            opacity: 1 !important;
-        }`;
+    .hl_nav-header-without-footer nav a:hover,
+    .hl_nav-header-without-footer nav a:hover span {
+        color: ${color} !important;
+        opacity: 1 !important;
+    }`;
     }
 
     // Build theme colors section
