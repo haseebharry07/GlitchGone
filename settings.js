@@ -92,8 +92,7 @@
 
     // Apply sidebar text color live
     function applySidebarTextColor(color) {
-        // Select all sidebar links
-        const sidebarLinks = document.querySelectorAll('.hl_nav-header-without-footer nav a');
+        const sidebarLinks = document.querySelectorAll('.sidebar-v2 nav a'); // corrected selector
         sidebarLinks.forEach(a => {
             a.style.setProperty("color", color, "important"); // link color
             const span = a.querySelector('span');
@@ -110,10 +109,14 @@
             document.head.appendChild(styleTag);
         }
         styleTag.innerHTML = `
-    .hl_nav-header-without-footer nav a:hover,
-    .hl_nav-header-without-footer nav a:hover span {
+    .sidebar-v2 nav a:hover,
+    .sidebar-v2 nav a:hover span {
         color: ${color} !important;
         opacity: 1 !important;
+    }
+    .sidebar-v2 nav a.active,
+    .sidebar-v2 nav a.active span {
+        color: ${color} !important;
     }`;
     }
 
