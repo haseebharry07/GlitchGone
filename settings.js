@@ -127,7 +127,7 @@
             { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
             { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
             { label: "Left Sidebar Text Color", key: "sidebarTextColor", var: null, apply: applySidebarTextColor },
-            { label: "Left Sidebar Tabs Color", key: "sidebarIconColor", var: null, apply: applySidebarTabsColor }, // updated
+            { label: "Left Sidebar Tabs BG Color", key: "sidebarTabsBgColor", var: null, apply: applySidebarTabsBgColor },
         ];
         colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var, c.apply)));
     }
@@ -154,17 +154,14 @@
         const sidebarText = localStorage.getItem("sidebarTextColor");
         if (sidebarText) applySidebarTextColor(sidebarText);
 
-        const sidebarTabs = localStorage.getItem("sidebarIconColor");
-        if (sidebarTabs) applySidebarTabsColor(sidebarTabs); // updated
+        const sidebarTabsBg = localStorage.getItem("sidebarTabsBgColor");
+        if (sidebarTabsBg) applySidebarTabsBgColor(sidebarTabsBg);
     }
-    function applySidebarTabsColor(color) {
+    function applySidebarTabsBgColor(color) {
         const sidebarLinks = document.querySelectorAll('.sidebar-v2 nav a');
         sidebarLinks.forEach(a => {
-            // Set link color
-            a.style.setProperty("color", color, "important");
-            // Set span text color
-            const span = a.querySelector('span');
-            if (span) span.style.setProperty("color", color, "important");
+            a.style.setProperty("--sidebar-menu-bg", color, "important"); // set CSS variable
+            a.style.setProperty("background-color", color, "important"); // fallback for direct bg
         });
     }
     // Find header controls container
