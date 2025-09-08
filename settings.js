@@ -23,14 +23,18 @@
   function createSection(title, contentBuilder) {
     const section = document.createElement("div");
     section.className = "tb-section";
+
     const header = document.createElement("div");
     header.className = "tb-section-header";
     header.textContent = title;
+
     const content = document.createElement("div");
     content.className = "tb-section-content";
+
     header.addEventListener("click", () => {
       content.style.display = content.style.display === "block" ? "none" : "block";
     });
+
     section.appendChild(header);
     section.appendChild(content);
     contentBuilder(content);
@@ -42,8 +46,15 @@
     tooltip.className = "tb-tooltip";
     tooltip.textContent = text;
     btn.appendChild(tooltip);
-    btn.addEventListener("mouseenter", () => { tooltip.style.visibility = "visible"; tooltip.style.opacity = "1"; });
-    btn.addEventListener("mouseleave", () => { tooltip.style.visibility = "hidden"; tooltip.style.opacity = "0"; });
+
+    btn.addEventListener("mouseenter", () => {
+      tooltip.style.visibility = "visible";
+      tooltip.style.opacity = "1";
+    });
+    btn.addEventListener("mouseleave", () => {
+      tooltip.style.visibility = "hidden";
+      tooltip.style.opacity = "0";
+    });
   }
 
   /* ================= Color Picker ================= */
@@ -109,7 +120,9 @@
     radiusLabel.className = "tb-radius-label";
 
     const radiusInput = document.createElement("input");
-    radiusInput.type = "range"; radiusInput.min = "0"; radiusInput.max = "50";
+    radiusInput.type = "range";
+    radiusInput.min = "0";
+    radiusInput.max = "50";
     radiusInput.value = localStorage.getItem("btnRadius") || 8;
     radiusInput.className = "tb-radius-input";
 
@@ -131,7 +144,6 @@
       const v = radiusInput.value;
       radiusVal.textContent = v + "px";
       localStorage.setItem("btnRadius", v);
-      sample.style.borderRadius = v + "px";
       document.querySelectorAll(".btn-theme").forEach(b => b.style.borderRadius = v + "px");
     });
   }
@@ -146,6 +158,7 @@
     const btn = document.createElement("a");
     btn.href = "javascript:void(0);";
     btn.id = "hl_header--themebuilder-icon";
+    btn.className = "tb-btn-icon";
     btn.innerHTML = `<span style="font-size:18px;">🖌️</span>`;
     initTooltip(btn, "Theme Builder");
     controlsContainer.appendChild(btn);
@@ -157,16 +170,20 @@
 
       // Header
       const headerBar = document.createElement('div');
+      headerBar.className = "tb-drawer-header";
       const title = document.createElement('div');
       title.textContent = 'Theme Builder';
+      title.className = "tb-drawer-title";
       const closeBtn = document.createElement('button');
       closeBtn.innerHTML = '&times;';
+      closeBtn.className = "tb-drawer-close";
       headerBar.appendChild(title);
       headerBar.appendChild(closeBtn);
       drawer.appendChild(headerBar);
 
       // Content
       const contentWrapper = document.createElement('div');
+      contentWrapper.className = "tb-drawer-content";
       drawer.appendChild(contentWrapper);
 
       // Sections
@@ -176,8 +193,8 @@
       document.body.appendChild(drawer);
 
       // Toggle
-      btn.addEventListener('click', () => drawer.style.right = '0');
-      closeBtn.addEventListener('click', () => drawer.style.right = '-420px');
+      btn.addEventListener('click', () => drawer.classList.add('open'));
+      closeBtn.addEventListener('click', () => drawer.classList.remove('open'));
 
       applySavedSettings();
     }
