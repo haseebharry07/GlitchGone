@@ -117,16 +117,16 @@
       opacity: 1 !important;
     }`;
     }
-    function buildThemeColorsSection(container) {
-        const colors = [
-            { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
-            { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
-            { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
-            { label: "Left Sidebar Tabs Color", key: "sidebarTextColor", var: null }, // null because applied via JS
-            { label: "Left Sidebar Tabs Hover Color", key: "sidebarIconColor", var: null }, // applied via JS
-        ];
-        colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var)));
-    }
+    //function buildThemeColorsSection(container) {
+    //    const colors = [
+    //        { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
+    //        { label: "Choose Primary BG Color", key: "primaryBgColor", var: "--primary-bg-color" },
+    //        { label: "Left Sidebar BG Color", key: "sidebarBgColor", var: "--sidebar-bg-color" },
+    //        { label: "Left Sidebar Tabs Color", key: "sidebarTextColor", var: null }, // null because applied via JS
+    //        { label: "Left Sidebar Tabs Hover Color", key: "sidebarIconColor", var: null }, // applied via JS
+    //    ];
+    //    colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var)));
+    //}
     function buildThemeColorsSection(container) {
         const colors = [
             { label: "Choose Primary Color", key: "primaryColor", var: "--primary-color" },
