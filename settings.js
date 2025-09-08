@@ -132,6 +132,7 @@
                     document.body.style.setProperty("--sidebar-menu-bg", color);
                 }
             },
+        ];
         colors.forEach(c => container.appendChild(createColorPicker(c.label, c.key, c.var, c.apply)));
     }
 
