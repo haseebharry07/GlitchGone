@@ -1,84 +1,65 @@
-/* theme-builder.css */
-
-/* Drawer */
+/* Example for drawer */
 #themeBuilderDrawer {
-    position: fixed;
-    top: 0;
-    right: -420px;
-    width: 400px;
-    max-width: 90%;
-    height: 100%;
-    background: #fff;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-    transition: right 0.28s ease;
-    z-index: 99999;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 400px;
+  max-width: 90%;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+  transition: right 0.28s ease;
+  z-index: 99999;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 /* Drawer header */
 #themeBuilderDrawer > div:first-child {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 14px 16px;
-    border-bottom: 1px solid #e6e6e6;
-    background: #fafafa;
-    font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e6e6e6;
+  background: #fafafa;
+  font-weight: 600;
 }
 
 /* Close button */
 #themeBuilderDrawer button {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 22px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #333;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
 }
 
-/* Theme Builder button */
-#hl_header--themebuilder-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: #000;
-    cursor: pointer;
-    position: relative;
-    border-radius: 4px;
-}
+/* Sections */
+.tb-section { border: 1px solid #ccc; border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
+.tb-section-header { padding: 10px; background: #f5f5f5; cursor: pointer; font-weight: bold; }
+.tb-section-content { display: none; padding: 15px; background: #fff; }
+
+/* Color picker */
+.tb-color-picker-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.tb-color-picker-label { min-width: 150px; font-weight: bold; }
+.tb-color-input { width: 50px; height: 40px; border: none; cursor: pointer; }
+.tb-color-code { font-family: monospace; font-size: 14px; cursor: pointer; color: #333; background: #f0f0f0; padding: 5px 10px; border-radius: 4px; }
 
 /* Tooltip */
-#hl_header--themebuilder-icon div {
-    position: absolute;
-    top: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: green;
-    color: #fff;
-    padding: 5px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.25s;
-    z-index: 10000;
+.tb-tooltip {
+  position: absolute; top: 110%; left: 50%; transform: translateX(-50%);
+  background-color: green; color: #fff; padding: 5px 8px; border-radius: 4px;
+  font-size: 12px; white-space: nowrap; visibility: hidden; opacity: 0;
+  transition: opacity 0.25s; z-index: 10000;
 }
 
-/* Sample Button */
-.btn-theme {
-    padding: 10px 20px;
-    border: none;
-    background-color: var(--primary-color, #007bff);
-    color: #fff;
-    cursor: pointer;
-}
+/* Button radius section */
+.tb-control-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.tb-radius-value { font-family: monospace; }
